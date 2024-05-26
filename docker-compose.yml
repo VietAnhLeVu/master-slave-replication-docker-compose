@@ -1,0 +1,65 @@
+version: '3'
+services:
+  mysql-master:
+    image: percona:ps-8.0
+    container_name: mysql-master
+    restart: unless-stopped
+    env_file: ./master/.env.master
+    cap_add:
+      - all
+    volumes:
+      - ./master/data:/var/lib/mysql
+      - ./master/my.cnf:/etc/my.cnf
+    environment:
+      - TZ:${TZ}
+      - MYSQL_USER:${MYSQL_USER}
+      - MYSQL_PASSWORD:${MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD:${MYSQL_PASSWORD}
+    networks:
+      default:
+        aliases:
+          - mysql
+    ports:
+      - "3308:3306"
+  mysql-slave1:
+    image: percona:ps-8.0
+    container_name: mysql-slave1
+    restart: unless-stopped
+    env_file: ./slave1/.env.slave1
+    cap_add:
+      - all
+    volumes:
+      - ./slave1/data:/var/lib/mysql
+      - ./slave1/my.cnf:/etc/my.cnf
+    environment:
+      - TZ:${TZ}
+      - MYSQL_USER:${MYSQL_USER}
+      - MYSQL_PASSWORD:${MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD:${MYSQL_ROOT_PASSWORD}
+    networks:
+      default:
+        aliases:
+          - mysql
+    ports:
+      - "3309:3306"
+  mysql-slave2:
+    image: percona:ps-8.0
+    container_name: mysql-slave2
+    restart: unless-stopped
+    env_file: ./slave2/.env.slave2
+    cap_add:
+      - all
+    volumes:
+      - ./slave2/data:/var/lib/mysql
+      - ./slave2/my.cnf:/etc/my.cnf
+    environment:
+      - TZ:${TZ}
+      - MYSQL_USER:${MYSQL_USER}
+      - MYSQL_PASSWORD:${MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD:${MYSQL_ROOT_PASSWORD}
+    networks:
+      default:
+        aliases:
+          - mysql
+    ports:
+      - "3310:3306"
